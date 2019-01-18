@@ -43,15 +43,15 @@ public class LoginController {
     log.info(loginVo.toString());
     String passInput = loginVo.getPassword();
     String mobile = loginVo.getMobile();
-    if(StringUtils.isEmpty(passInput)){
-      return Result.error(CodeMsg.PASSWORD_EMPTY);
-    }
-    if(StringUtils.isEmpty(mobile)){
-      return Result.error(CodeMsg.MOBILE_EMPTY);
-    }
-    if(!ValidatorUtil.isMobile(mobile)){
-      return Result.error(CodeMsg.MOBILE_ERROR);
-    }
+//    if(StringUtils.isEmpty(passInput)){
+//      return Result.error(CodeMsg.PASSWORD_EMPTY);
+//    }
+//    if(StringUtils.isEmpty(mobile)){
+//      return Result.error(CodeMsg.MOBILE_EMPTY);
+//    }
+//    if(!ValidatorUtil.isMobile(mobile)){
+//      return Result.error(CodeMsg.MOBILE_ERROR);
+//    }
 //    String token = userService.login(response, loginVo);
 
     CodeMsg cm  = saleUserService.login(loginVo);

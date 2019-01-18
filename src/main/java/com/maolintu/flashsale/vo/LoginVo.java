@@ -1,8 +1,18 @@
 package com.maolintu.flashsale.vo;
 
+import com.maolintu.flashsale.validator.IsMobile;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
 public class LoginVo {
+  @NotNull
+  @IsMobile
   private String mobile;
+
+  @NotNull
+  @Length(min=32)
   private String password;
+
 
   public String getMobile() {
     return mobile;
