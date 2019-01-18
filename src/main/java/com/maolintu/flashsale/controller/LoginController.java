@@ -4,6 +4,7 @@ package com.maolintu.flashsale.controller;
 import com.maolintu.flashsale.result.CodeMsg;
 import com.maolintu.flashsale.result.Result;
 import com.maolintu.flashsale.service.RedisService;
+import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.service.UserService;
 import com.maolintu.flashsale.util.ValidatorUtil;
 import com.maolintu.flashsale.vo.LoginVo;
@@ -25,7 +26,7 @@ public class LoginController {
   private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
   @Autowired
-  UserService userService;
+  SaleUserService saleUserService;
 
   @Autowired
   RedisService redisService;
@@ -38,7 +39,7 @@ public class LoginController {
 
   @RequestMapping("/do_login")
   @ResponseBody
-  public Result<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
+  public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
     log.info(loginVo.toString());
     String passInput = loginVo.getPassword();
     String mobile = loginVo.getMobile();
@@ -48,11 +49,19 @@ public class LoginController {
     if(StringUtils.isEmpty(mobile)){
       return Result.error(CodeMsg.MOBILE_EMPTY);
     }
-    if(ValidatorUtil.isMobile(mobile)){
+    if(!ValidatorUtil.isMobile(mobile)){
       return Result.error(CodeMsg.MOBILE_ERROR);
     }
 //    String token = userService.login(response, loginVo);
-    return Result.success(loginVo.toString());
+
+    CodeMsg cm  = saleUserService.login(loginVo);
+
+    if(cm.getCode() == 0){
+      return Result.success(true);
+    }else{
+      return Result.error(cm);
+    }
+
   }
 
 }
