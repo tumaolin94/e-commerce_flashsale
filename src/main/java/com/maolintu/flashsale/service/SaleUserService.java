@@ -3,6 +3,7 @@ package com.maolintu.flashsale.service;
 import com.maolintu.flashsale.controller.LoginController;
 import com.maolintu.flashsale.dao.SaleUserDao;
 import com.maolintu.flashsale.domain.SaleUser;
+import com.maolintu.flashsale.exception.GlobalException;
 import com.maolintu.flashsale.result.CodeMsg;
 import com.maolintu.flashsale.util.MD5Util;
 import com.maolintu.flashsale.vo.LoginVo;
@@ -23,9 +24,9 @@ public class SaleUserService {
     return saleUserDao.getById(id);
   }
 
-  public CodeMsg login(LoginVo loginVo) {
+  public boolean login(LoginVo loginVo) {
     if(loginVo == null){
-      return CodeMsg.SERVER_ERROR;
+      throw new GlobalException(CodeMsg.SERVER_ERROR);
     }
 
     String mobile = loginVo.getMobile();
@@ -33,7 +34,7 @@ public class SaleUserService {
 
     SaleUser user = getById(Long.parseLong(mobile));
     if(user == null){
-      return CodeMsg.MOBILE_NOT_EXIST;
+      throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
     }
 
     String dbPass = user.getPassword();
@@ -41,8 +42,8 @@ public class SaleUserService {
     String calcPass = MD5Util.formPassToDBPass(password, dbSalt);
     log.info("dbPass= {}, dbSalt = {}, password = {},calcPass = {}", dbPass, dbSalt, password, calcPass);
     if(!calcPass.equals(dbPass)){
-      return CodeMsg.PASSWORD_ERROR;
+      throw new GlobalException(CodeMsg.PASSWORD_ERROR);
     }
-    return CodeMsg.SUCCESS;
+    return true;
   }
 }
