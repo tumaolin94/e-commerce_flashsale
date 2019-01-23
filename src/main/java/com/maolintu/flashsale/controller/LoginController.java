@@ -42,7 +42,7 @@ public class LoginController {
   public Result<Boolean> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {
     log.info(loginVo.toString());
 
-    saleUserService.login(loginVo);
+    saleUserService.login(response, loginVo);
 
     return Result.success(true);
 
