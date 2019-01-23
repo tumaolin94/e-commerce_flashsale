@@ -1,8 +1,11 @@
 package com.maolintu.flashsale.controller;
 
 import com.maolintu.flashsale.domain.SaleUser;
+import com.maolintu.flashsale.service.GoodsService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
+import com.maolintu.flashsale.vo.GoodsVo;
+import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class GoodsController {
 
   @Autowired
   RedisService redisService;
+
+  @Autowired
+  GoodsService goodsService;
 /**
  * 0.1 Version
  *
@@ -43,7 +49,14 @@ public class GoodsController {
   public String toLogin(Model model, SaleUser user){
 
     model.addAttribute("user", user);
-    return "goods_list";
+
+    // get the list of goods;
+    List<GoodsVo> goodsList = goodsService.listGoodsVo();
+
+
+    model.addAttribute("goodsList", goodsList);
+
+    return "goods_list2";
   }
 
 //  @RequestMapping("/to_detail")

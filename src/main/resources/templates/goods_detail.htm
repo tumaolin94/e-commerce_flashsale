@@ -77,7 +77,7 @@
      </tr>
       <tr>  
         <td>秒杀价</td>  
-        <td colspan="3"  id="miaoshaPrice"></td>  
+        <td colspan="3"  id="salePrice"></td>
      </tr>
      <tr>  
         <td>库存数量</td>  
@@ -184,7 +184,7 @@ function render(detail){
 	$("#remainSeconds").val(remainSeconds);
 	$("#goodsId").val(goods.id);
 	$("#goodsPrice").text(goods.goodsPrice);
-	$("#miaoshaPrice").text(goods.miaoshaPrice);
+	$("#miaoshaPrice").text(goods.salePrice);
 	$("#stockCount").text(goods.stockCount);
 	countDown();
 }
