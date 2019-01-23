@@ -10,6 +10,7 @@ import com.maolintu.flashsale.util.MD5Util;
 import com.maolintu.flashsale.util.UUIDUtil;
 import com.maolintu.flashsale.vo.LoginVo;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SaleUserService {
 
-  private static final String COOKIE_NAME_TOKEN = "token";
+  public static final String COOKIE_NAME_TOKEN = "token";
 
   @Autowired
   SaleUserDao saleUserDao;
@@ -55,12 +56,26 @@ public class SaleUserService {
 
     //create cookie
     String token = UUIDUtil.uuid();
-    redisService.set(SaleUserKey.token, token, user);
+    addCookie(response, token, user);
+    return true;
+  }
 
+  public SaleUser getByToken(HttpServletResponse response, String token) {
+    if(StringUtils.isEmpty(token)) {
+      return null;
+    }
+    SaleUser user = redisService.get(SaleUserKey.token, token, SaleUser.class);
+    if(user != null) {
+      addCookie(response, token, user);
+    }
+    return user;
+  }
+
+  private void addCookie(HttpServletResponse response, String token, SaleUser user) {
+    redisService.set(SaleUserKey.token, token, user);
     Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
     cookie.setMaxAge(SaleUserKey.token.expireSeconds());
     cookie.setPath("/");
     response.addCookie(cookie);
-    return true;
   }
 }
