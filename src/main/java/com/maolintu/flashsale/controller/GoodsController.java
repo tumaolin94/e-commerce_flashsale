@@ -21,18 +21,42 @@ public class GoodsController {
 
   @Autowired
   RedisService redisService;
+/**
+ * 0.1 Version
+ *
+ * */
+//  @RequestMapping("/to_list")
+//  public String toLogin(HttpServletResponse response, Model model, @CookieValue(value = SaleUserService.COOKIE_NAME_TOKEN, required = false) String cookieToken,
+//      @RequestParam(value=SaleUserService.COOKIE_NAME_TOKEN, required = false) String paramToken){
+//
+//    if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
+//      return "login";
+//    }
+//
+//    String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
+//    SaleUser user = saleUserService.getByToken(response, token);
+//    model.addAttribute("user", user);
+//    return "goods_list";
+//  }
 
   @RequestMapping("/to_list")
-  public String toLogin(HttpServletResponse response, Model model, @CookieValue(value = SaleUserService.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-      @RequestParam(value=SaleUserService.COOKIE_NAME_TOKEN, required = false) String paramToken){
+  public String toLogin(Model model, SaleUser user){
 
-    if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
-      return "login";
-    }
-
-    String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
-    SaleUser user = saleUserService.getByToken(response, token);
     model.addAttribute("user", user);
     return "goods_list";
   }
+
+//  @RequestMapping("/to_detail")
+//  public String detail(HttpServletResponse response, Model model, @CookieValue(value = SaleUserService.COOKIE_NAME_TOKEN, required = false) String cookieToken,
+//      @RequestParam(value=SaleUserService.COOKIE_NAME_TOKEN, required = false) String paramToken){
+//
+//    if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
+//      return "login";
+//    }
+//
+//    String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
+//    SaleUser user = saleUserService.getByToken(response, token);
+//    model.addAttribute("user", user);
+//    return "goods_list";
+//  }
 }
