@@ -34,4 +34,14 @@ public class GoodsVo extends Goods {
   public void setSalePrice(Double salePrice) {
     this.salePrice = salePrice;
   }
+
+  @Override
+  public String toString() {
+    return "GoodsVo{" +
+        "salePrice=" + salePrice +
+        ", stockCount=" + stockCount +
+        ", startDate=" + startDate +
+        ", endDate=" + endDate +
+        '}';
+  }
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Goods Detail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" th:src="@{/jquery-validation/jquery.validate.min.js}"></script>
+    <script type="text/javascript" th:src="@{/jquery-validation/localization/messages_zh.min.js}"></script>
+    <!-- layer -->
+    <script type="text/javascript" th:src="@{/layer/layer.js}"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" th:src="@{/js/md5.min.js}"></script>
+    <!-- common.js -->
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Details</div>
+  <div class="panel-body">
+  	<span th:if="${user eq null}"> Please sign in!<br/></span>
+  	<span>No delivery address!</span>
+  </div>
+  <table class="table" id="goodslist">
+  	<tr>  
+        <td>Name</td>
+        <td colspan="3" th:text="${goods.goodsName}"></td> 
+     </tr>  
+     <tr>  
+        <td>Image</td>
+        <td colspan="3"><img th:src="@{${goods.goodsImg}}" width="200" height="200" /></td>  
+     </tr>
+     <tr>  
+        <td>Start Time:</td>
+        <td th:text="${#dates.format(goods.startDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td id="miaoshaTip">	
+        	<input type="hidden" id="remainSeconds" th:value="${remainSeconds}" />
+        	<span th:if="${flashSaleStatus eq 0}">Sale Countdown：<span id="countDown" th:text="${remainSeconds}"></span>秒</span>
+        	<span th:if="${flashSaleStatus eq 1}">Sale Processing</span>
+        	<span th:if="${flashSaleStatus eq 2}">Sale Finished</span>
+        </td>
+        <td>
+        	<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+        		<button class="btn btn-primary btn-block" type="submit" id="buyButton">Buy!</button>
+        		<input type="hidden" name="goodsId" th:value="${goods.id}" />
+        	</form>
+        </td>
+     </tr>
+     <tr>  
+        <td>original Price</td>
+        <td colspan="3" th:text="${goods.goodsPrice}"></td>  
+     </tr>
+      <tr>  
+        <td>Sale Price</td>
+        <td colspan="3" th:text="${goods.salePrice}"></td>
+     </tr>
+     <tr>  
+        <td>In stock </td>
+        <td colspan="3" th:text="${goods.stockCount}"></td>  
+     </tr>
+  </table>
+</div>
+</body>
+<script>
+$(function(){
+	countDown();
+});
+
+function countDown(){
+	var remainSeconds = $("#remainSeconds").val();
+	var timeout;
+	if(remainSeconds > 0){//秒杀还没开始，倒计时
+		$("#buyButton").attr("disabled", true);
+		timeout = setTimeout(function(){
+			$("#countDown").text(remainSeconds - 1);
+			$("#remainSeconds").val(remainSeconds - 1);
+			countDown();
+		},1000);
+	}else if(remainSeconds == 0){//秒杀进行中
+		$("#buyButton").attr("disabled", false);
+		if(timeout){
+			clearTimeout(timeout);
+		}
+		$("#miaoshaTip").html("Go Go Go");
+	}else{//秒杀已经结束
+		$("#buyButton").attr("disabled", true);
+		$("#miaoshaTip").html("Has already end!");
+	}
+}
+
+</script>
+</html>

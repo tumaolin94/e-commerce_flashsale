@@ -8,10 +8,13 @@ import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,6 +30,8 @@ public class GoodsController {
 
   @Autowired
   GoodsService goodsService;
+
+  private static Logger logger = LoggerFactory.getLogger(GoodsController.class);
 /**
  * 0.1 Version
  *
@@ -48,28 +53,52 @@ public class GoodsController {
   @RequestMapping("/to_list")
   public String toLogin(Model model, SaleUser user){
 
-    model.addAttribute("user", user);
+
 
     // get the list of goods;
     List<GoodsVo> goodsList = goodsService.listGoodsVo();
 
 
+    model.addAttribute("user", user);
     model.addAttribute("goodsList", goodsList);
 
     return "goods_list2";
   }
 
-//  @RequestMapping("/to_detail")
-//  public String detail(HttpServletResponse response, Model model, @CookieValue(value = SaleUserService.COOKIE_NAME_TOKEN, required = false) String cookieToken,
-//      @RequestParam(value=SaleUserService.COOKIE_NAME_TOKEN, required = false) String paramToken){
-//
-//    if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
-//      return "login";
-//    }
-//
-//    String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
-//    SaleUser user = saleUserService.getByToken(response, token);
-//    model.addAttribute("user", user);
-//    return "goods_list";
-//  }
+  @RequestMapping("/to_detail/{goodsId}")
+  public String detail(Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+
+    GoodsVo goodsVo = goodsService.getGoodsVoByGoodsId(goodsId);
+
+    model.addAttribute("user", user);
+    model.addAttribute("goods", goodsVo);
+
+    long startTime = goodsVo.getStartDate().getTime();
+    long endTime = goodsVo.getEndDate().getTime();
+    long curTime = System.currentTimeMillis();
+
+    long remainSeconds = 0;
+
+    int flashSaleStatus = 0;
+    if(curTime < startTime ){ //countDown
+      flashSaleStatus = 0;
+
+      remainSeconds = (startTime - curTime) / 1000;
+
+
+    }else if(curTime < startTime ){// End
+      flashSaleStatus = 2;
+      remainSeconds = - 1;
+    }else{// Being
+      flashSaleStatus = 1;
+      remainSeconds = -1;
+    }
+
+    model.addAttribute("flashSaleStatus", flashSaleStatus);
+    model.addAttribute("remainSeconds", remainSeconds);
+
+    logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
+
+    return "goods_detail2";
+  }
 }
