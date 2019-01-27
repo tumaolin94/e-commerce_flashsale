@@ -6,17 +6,13 @@ import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/goods")
@@ -62,7 +58,7 @@ public class GoodsController {
     model.addAttribute("user", user);
     model.addAttribute("goodsList", goodsList);
 
-    return "goods_list2";
+    return "goods_list";
   }
 
   @RequestMapping("/to_detail/{goodsId}")
@@ -86,19 +82,20 @@ public class GoodsController {
       remainSeconds = (startTime - curTime) / 1000;
 
 
-    }else if(curTime < startTime ){// End
+    }else if(curTime > endTime ){// End
       flashSaleStatus = 2;
       remainSeconds = - 1;
     }else{// Being
       flashSaleStatus = 1;
-      remainSeconds = -1;
+      remainSeconds = 0;
     }
 
     model.addAttribute("flashSaleStatus", flashSaleStatus);
     model.addAttribute("remainSeconds", remainSeconds);
 
     logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
+    logger.info("startTime = {}, endTime = {}, curTime = {}, , remainSeconds = {}", startTime, endTime, curTime, remainSeconds);
 
-    return "goods_detail2";
+    return "goods_detail";
   }
 }
