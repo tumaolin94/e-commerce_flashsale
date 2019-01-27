@@ -45,7 +45,7 @@
         	<span th:if="${flashSaleStatus eq 2}">Sale Finished</span>
         </td>
         <td>
-        	<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+        	<form id="miaoshaForm" method="post" action="/sale/do_buy">
         		<button class="btn btn-primary btn-block" type="submit" id="buyButton">Buy!</button>
         		<input type="hidden" name="goodsId" th:value="${goods.id}" />
         	</form>
