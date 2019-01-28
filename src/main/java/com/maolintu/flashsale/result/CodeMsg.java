@@ -27,7 +27,7 @@ public class CodeMsg {
   public static CodeMsg ORDER_NOT_EXIST = new CodeMsg(500400, "ORDER_NOT_EXIST");
 
   //Flashsale 5005XX
-  public static CodeMsg SALE_OVER = new CodeMsg(500500, "SALE_OVER_OVER");
+  public static CodeMsg SALE_OVER = new CodeMsg(500500, "SALE_OVER");
   public static CodeMsg REPEATE_ORDER = new CodeMsg(500501, "REPEATE_ORDER");
   public static CodeMsg BUY_FAIL = new CodeMsg(500502, "BUY_FAIL");
 

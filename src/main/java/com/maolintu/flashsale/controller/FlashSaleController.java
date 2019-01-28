@@ -39,7 +39,7 @@ public class FlashSaleController {
   @Autowired
   FlashSaleService flashSaleService;
 
-  private static Logger logger = LoggerFactory.getLogger(GoodsController.class);
+  private static Logger logger = LoggerFactory.getLogger(FlashSaleController.class);
 
   @RequestMapping("/do_buy")
   public String doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
@@ -68,7 +68,8 @@ public class FlashSaleController {
 
     model.addAttribute("orderInfo", orderInfo);
     model.addAttribute("goods", goods);
-    return "order_detail";
+
+    return "order_detail2";
   }
 
 }

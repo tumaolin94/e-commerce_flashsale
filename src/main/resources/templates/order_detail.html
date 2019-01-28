@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <html>
 <head>
     <title>订单详情</title>
@@ -41,7 +42,8 @@
      </tr>  
      <tr>  
         <td>商品图片</td>  
-        <td colspan="2"><img  id="goodsImg" width="200" height="200" /></td>  
+        <td colspan="2"><img  id="goodsImg" width="200" height="200" /></td>
+       <!--<td colspan="2"><img th:src="@{${goods.goodsImg}}" width="200" height="200" /></td>-->
      </tr>
       <tr>  
         <td>订单价格</td>  
@@ -95,23 +97,23 @@ $(function(){
 
 function getOrderDetail(){
 	var orderId = g_getQueryString("orderId");
-	$.ajax({
-		url:"/order/detail",
-		type:"GET",
-		data:{
-			orderId:orderId
-		},
-		success:function(data){
-			if(data.code == 0){
-				render(data.data);
-			}else{
-				layer.msg(data.msg);
-			}
-		},
-		error:function(){
-			layer.msg("客户端请求有误");
-		}
-	});
+	// $.ajax({
+	// 	url:"/order/detail",
+	// 	type:"GET",
+	// 	data:{
+	// 		orderId:orderId
+	// 	},
+	// 	success:function(data){
+	// 		if(data.code == 0){
+	// 			render(data.data);
+	// 		}else{
+	// 			layer.msg(data.msg);
+	// 		}
+	// 	},
+	// 	error:function(){
+	// 		layer.msg("客户端请求有误");
+	// 	}
+	// });
 }
 
 
