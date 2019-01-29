@@ -47,7 +47,7 @@ public class GoodsController {
 //  }
 
   @RequestMapping("/to_list")
-  public String toLogin(Model model, SaleUser user){
+  public String toList(Model model, SaleUser user){
 
 
 
