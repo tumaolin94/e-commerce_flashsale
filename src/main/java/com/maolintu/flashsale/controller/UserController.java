@@ -22,7 +22,7 @@ public class UserController {
   @Autowired
   RedisService redisService;
 
-  private static Logger logger = LoggerFactory.getLogger(FlashSaleController.class);
+  private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
   @RequestMapping("/info")
   @ResponseBody
