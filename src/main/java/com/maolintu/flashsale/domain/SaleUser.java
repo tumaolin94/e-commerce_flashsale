@@ -76,4 +76,17 @@ public class SaleUser {
     this.loginCount = loginCount;
   }
 
+  @Override
+  public String toString() {
+    return "SaleUser{" +
+        "id=" + id +
+        ", nickname='" + nickname + '\'' +
+        ", password='" + password + '\'' +
+        ", salt='" + salt + '\'' +
+        ", head='" + head + '\'' +
+        ", registerDate=" + registerDate +
+        ", lastLoginDate=" + lastLoginDate +
+        ", loginCount=" + loginCount +
+        '}';
+  }
 }

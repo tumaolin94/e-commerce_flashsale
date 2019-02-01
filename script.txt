@@ -1,0 +1,7 @@
+# 100 threads, 100000 requests
+redis-benchmark -h 127.0.0.1 -p 6379 -c 100 -n 100000
+# 100 bytes package
+redis-benchmark -h 127.0.0.1 -p 6379 -q -d 100
+
+#only test [set] and [lpush]
+redis-benchmark -t set,lpush -n 100000 -q
