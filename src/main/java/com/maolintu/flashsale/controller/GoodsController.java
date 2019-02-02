@@ -100,12 +100,23 @@ public class GoodsController {
     }
   }
 
-  @RequestMapping("/to_detail/{goodsId}")
-  public String detail(Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+  @RequestMapping(value = "/to_detail/{goodsId}", produces = "text/html")
+  @ResponseBody
+  public String detail(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+
+    model.addAttribute("user", user);
+
+    String html = redisService.get(GoodsKey.getGoodsDetail, ""+goodsId, String.class);
+
+    //catch
+    if(!StringUtils.isEmpty(html)){
+      logger.info("return page from catch");
+      return html;
+    }
 
     GoodsVo goodsVo = goodsService.getGoodsVoByGoodsId(goodsId);
 
-    model.addAttribute("user", user);
+
     model.addAttribute("goods", goodsVo);
 
     long startTime = goodsVo.getStartDate().getTime();
@@ -135,6 +146,18 @@ public class GoodsController {
     logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
     logger.info("startTime = {}, endTime = {}, curTime = {}, , remainSeconds = {}", startTime, endTime, curTime, remainSeconds);
 
-    return "goods_detail";
+//    return "goods_detail";
+
+    // render
+    SpringWebContext springWebContext = new SpringWebContext(request, response, request.getServletContext(), request.getLocale(),
+        model.asMap(), applicationContext);
+
+    html = thymeleafViewResolver.getTemplateEngine().process("goods_detail" , springWebContext);
+
+    if(!StringUtils.isEmpty(html)){
+      redisService.set(GoodsKey.getGoodsDetail, ""+goodsId, html);
+    }
+    return html;
+
   }
 }
