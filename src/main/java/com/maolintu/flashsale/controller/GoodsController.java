@@ -1,18 +1,26 @@
 package com.maolintu.flashsale.controller;
 
 import com.maolintu.flashsale.domain.SaleUser;
+import com.maolintu.flashsale.redis.GoodsKey;
 import com.maolintu.flashsale.service.GoodsService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.spring4.context.SpringWebContext;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 
 @Controller
 @RequestMapping("/goods")
@@ -26,6 +34,15 @@ public class GoodsController {
 
   @Autowired
   GoodsService goodsService;
+
+  @Autowired
+  ThymeleafViewResolver thymeleafViewResolver;
+
+  @Autowired
+  ApplicationContext applicationContext;
+
+
+
 
   private static Logger logger = LoggerFactory.getLogger(GoodsController.class);
 /**
@@ -46,8 +63,9 @@ public class GoodsController {
 //    return "goods_list";
 //  }
 
-  @RequestMapping("/to_list")
-  public String toList(Model model, SaleUser user){
+  @RequestMapping(value = "/to_list", produces = "text/html")
+  @ResponseBody
+  public String toList(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user){
 
 
 
@@ -58,7 +76,28 @@ public class GoodsController {
     model.addAttribute("user", user);
     model.addAttribute("goodsList", goodsList);
 
-    return "goods_list";
+
+//    return "goods_list";
+
+    String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
+
+    //catch
+    if(!StringUtils.isEmpty(html)){
+      logger.info("return page from catch");
+      return html;
+    }else{
+
+      // render
+      SpringWebContext springWebContext = new SpringWebContext(request, response, request.getServletContext(), request.getLocale(),
+          model.asMap(), applicationContext);
+
+      html = thymeleafViewResolver.getTemplateEngine().process("goods_list" , springWebContext);
+
+      if(!StringUtils.isEmpty(html)){
+        redisService.set(GoodsKey.getGoodsList, "", html);
+      }
+      return html;
+    }
   }
 
   @RequestMapping("/to_detail/{goodsId}")
