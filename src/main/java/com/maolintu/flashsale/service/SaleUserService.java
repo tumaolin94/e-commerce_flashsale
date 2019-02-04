@@ -30,9 +30,36 @@ public class SaleUserService {
   private static Logger log = LoggerFactory.getLogger(SaleUserService.class);
 
   public SaleUser getById(long id){
-    return saleUserDao.getById(id);
+    // taking from catch
+    SaleUser saleUser = redisService.get(SaleUserKey.getById, "" + id, SaleUser.class);
+
+    if(saleUser != null){
+      return saleUser;
+    }
+    saleUser = saleUserDao.getById(id);
+    if(saleUser != null){
+      redisService.set(SaleUserKey.getById, "" + id, saleUser);
+    }
+    return saleUser;
   }
 
+  public boolean updatePassword(String token, long id, String formPass) {
+    //Taking user
+    SaleUser user = getById(id);
+    if(user == null) {
+      throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+    }
+    //update in db
+    SaleUser toBeUpdate = new SaleUser();
+    toBeUpdate.setId(id);
+    toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, user.getSalt()));
+    saleUserDao.update(toBeUpdate);
+    //update catch
+    redisService.delete(SaleUserKey.getById, ""+id);
+    user.setPassword(toBeUpdate.getPassword());
+    redisService.set(SaleUserKey.token, token, user);
+    return true;
+  }
   public String login(HttpServletResponse response, LoginVo loginVo) {
     if(loginVo == null){
       throw new GlobalException(CodeMsg.SERVER_ERROR);

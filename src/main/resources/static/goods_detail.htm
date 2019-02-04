@@ -1,0 +1,243 @@
+<!DOCTYPE HTML>
+<html >
+<head>
+    <title>商品详情</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <!-- jquery -->
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery-validator -->
+    <script type="text/javascript" src="/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/jquery-validation/localization/messages_zh.min.js"></script>
+    <!-- layer -->
+    <script type="text/javascript" src="/layer/layer.js"></script>
+    <!-- md5.js -->
+    <script type="text/javascript" src="/js/md5.min.js"></script>
+    <!-- common.js -->
+    <script type="text/javascript" src="/js/common.js"></script>
+    <style type="text/css">
+        html,body{
+            height:100%;
+            width:100%;
+        }
+        body{
+            background:url('/img/bg2.jpg') no-repeat;
+            background-size:100% 100%;
+        }
+        #goodslist td{
+            border-top:1px solid #39503f61;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel panel-default" style="height:100%;background-color:rgba(222,222,222,0.8)" >
+  <div class="panel-heading">Goods Detail</div>
+  <div class="panel-body">
+  	<span id="userTip">Please Login!<br/></span>
+  	<span>No address</span>
+  </div>
+  <table class="table" id="goodslist">
+  	<tr>  
+        <td>Good Name</td>
+        <td colspan="3" id="goodsName"></td> 
+     </tr>  
+     <tr>  
+        <td>Good Image</td>
+        <td colspan="3"><img  id="goodsImg" width="200" height="200" /></td>  
+     </tr>
+     <tr>  
+        <td>Sale start time</td>
+        <td id="startTime"></td>
+        <td >	
+        	<input type="hidden" id="remainSeconds" />
+        	<span id="saleTip"></span>
+        </td>
+        <td>
+        <!--  
+        	<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
+        		<button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
+        		<input type="hidden" name="goodsId"  id="goodsId" />
+        	</form>-->
+        	<div class="row">
+        		<div class="form-inline">
+		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
+		        	<input id="verifyCode"  class="form-control" style="display:none"/>
+		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getMiaoshaPath()">立即秒杀</button>
+        		</div>
+        	</div>
+        	<input type="hidden" name="goodsId"  id="goodsId" />
+        </td>
+     </tr>
+     <tr>  
+        <td>Original Price</td>
+        <td colspan="3" id="goodsPrice"></td>  
+     </tr>
+      <tr>  
+        <td>Sale Price</td>
+        <td colspan="3"  id="salePrice"></td>  
+     </tr>
+     <tr>  
+        <td>In stock</td>
+        <td colspan="3"  id="stockCount"></td>  
+     </tr>
+  </table>
+</div>
+</body>
+<script>
+
+function getMiaoshaPath(){
+	var goodsId = $("#goodsId").val();
+	g_showLoading();
+	$.ajax({
+		url:"/miaosha/path",
+		type:"GET",
+		data:{
+			goodsId:goodsId,
+			verifyCode:$("#verifyCode").val()
+		},
+		success:function(data){
+			if(data.code == 0){
+				var path = data.data;
+				doMiaosha(path);
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("request error!");
+		}
+	});
+}
+
+function getMiaoshaResult(goodsId){
+	g_showLoading();
+	$.ajax({
+		url:"/miaosha/result",
+		type:"GET",
+		data:{
+			goodsId:$("#goodsId").val(),
+		},
+		success:function(data){
+			if(data.code == 0){
+				var result = data.data;
+				if(result < 0){
+					layer.msg("Buy fails!");
+				}else if(result == 0){//继续轮询
+					setTimeout(function(){
+						getMiaoshaResult(goodsId);
+					}, 200);
+				}else{
+					layer.confirm("Con! You bought it! See order?", {btn:["Yes","No"]},
+							function(){
+								window.location.href="/order_detail.htm?orderId="+result;
+							},
+							function(){
+								layer.closeAll();
+							});
+				}
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("Request fails!");
+		}
+	});
+}
+
+function doMiaosha(path){
+	$.ajax({
+		url:"/sale/do_buy",
+		// url:"/sale/"+path+"/do_buy",
+		type:"POST",
+		data:{
+			goodsId:$("#goodsId").val()
+		},
+		success:function(data){
+			if(data.code == 0){
+				//window.location.href="/order_detail.htm?orderId="+data.data.id;
+				getMiaoshaResult($("#goodsId").val());
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("Request fails!");
+		}
+	});
+	
+}
+
+function render(detail){
+	var flashSaleStatus = detail.flashSaleStatus;
+	var  remainSeconds = detail.remainSeconds;
+	var goods = detail.goods;
+	var user = detail.user;
+	if(user){
+		$("#userTip").hide();
+	}
+	$("#goodsName").text(goods.goodsName);
+	$("#goodsImg").attr("src", goods.goodsImg);
+	$("#startTime").text(new Date(goods.startDate).format("yyyy-MM-dd hh:mm:ss"));
+	$("#remainSeconds").val(remainSeconds);
+	$("#goodsId").val(goods.id);
+	$("#goodsPrice").text(goods.goodsPrice);
+	$("#salePrice").text(goods.salePrice);
+	$("#stockCount").text(goods.stockCount);
+	countDown();
+}
+
+$(function(){
+	//countDown();
+	getDetail();
+});
+
+function getDetail(){
+	var goodsId = g_getQueryString("goodsId");
+	$.ajax({
+		url:"/goods/detail/"+goodsId,
+		type:"GET",
+		success:function(data){
+			if(data.code == 0){
+				render(data.data);
+			}else{
+				layer.msg(data.msg);
+			}
+		},
+		error:function(){
+			layer.msg("Error for request");
+		}
+	});
+}
+
+function countDown(){
+	var remainSeconds = $("#remainSeconds").val();
+	var timeout;
+	if(remainSeconds > 0){//秒杀还没开始，倒计时
+	   $("#buyButton").attr("disabled", true);
+	   $("#saleTip").html("Count down: ："+remainSeconds+"秒");
+		timeout = setTimeout(function(){
+			$("#countDown").text(remainSeconds - 1);
+			$("#remainSeconds").val(remainSeconds - 1);
+			countDown();
+		},1000);
+	}else if(remainSeconds == 0){//秒杀进行中
+		$("#buyButton").attr("disabled", false);
+		if(timeout){
+			clearTimeout(timeout);
+		}
+		$("#saleTip").html("Processing");
+
+	}else{//秒杀已经结束
+		$("#buyButton").attr("disabled", true);
+		$("#saleTip").html("Has finished!");
+		$("#verifyCodeImg").hide();
+		$("#verifyCode").hide();
+	}
+}
+
+</script>
+</html>

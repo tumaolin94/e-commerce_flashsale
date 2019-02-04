@@ -43,8 +43,8 @@
                 <td th:text="${goods.goodsPrice}"></td>  
                 <td th:text="${goods.salePrice}"></td>
                 <td th:text="${goods.stockCount}"></td>
-                <td><a th:href="'/goods_detail.htm?goodsId='+${goods.id}">detail</a></td>
-    </tr>
+                <td><a th:href="'/goods/to_detail/'+${goods.id}">Detail</a></td>
+     </tr>
   </table>
 </div>
 </body>

@@ -13,4 +13,5 @@ public class SaleUserKey extends BasePrefix {
   }
 
   public static SaleUserKey token = new SaleUserKey(TOKEN_EXPIRE,"tk");
+  public static SaleUserKey getById = new SaleUserKey(0,"id");
 }

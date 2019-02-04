@@ -2,9 +2,11 @@ package com.maolintu.flashsale.controller;
 
 import com.maolintu.flashsale.domain.SaleUser;
 import com.maolintu.flashsale.redis.GoodsKey;
+import com.maolintu.flashsale.result.Result;
 import com.maolintu.flashsale.service.GoodsService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
+import com.maolintu.flashsale.vo.GoodsDetailVo;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -68,24 +70,25 @@ public class GoodsController {
   public String toList(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user){
 
 
+    String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
 
+    model.addAttribute("user", user);
+    //catch
+    if(!StringUtils.isEmpty(html)){
+      logger.info("return page from catch");
+      return html;
+    }
     // get the list of goods;
     List<GoodsVo> goodsList = goodsService.listGoodsVo();
 
 
-    model.addAttribute("user", user);
+
     model.addAttribute("goodsList", goodsList);
 
 
 //    return "goods_list";
 
-    String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
 
-    //catch
-    if(!StringUtils.isEmpty(html)){
-      logger.info("return page from catch");
-      return html;
-    }else{
 
       // render
       SpringWebContext springWebContext = new SpringWebContext(request, response, request.getServletContext(), request.getLocale(),
@@ -97,12 +100,15 @@ public class GoodsController {
         redisService.set(GoodsKey.getGoodsList, "", html);
       }
       return html;
-    }
   }
 
-  @RequestMapping(value = "/to_detail/{goodsId}", produces = "text/html")
+  /**
+   * return data by render templete
+   *
+   * */
+  @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
   @ResponseBody
-  public String detail(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+  public String detail2(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
 
     model.addAttribute("user", user);
 
@@ -158,6 +164,46 @@ public class GoodsController {
       redisService.set(GoodsKey.getGoodsDetail, ""+goodsId, html);
     }
     return html;
+
+  }
+
+
+  @RequestMapping(value = "/detail/{goodsId}")
+  @ResponseBody
+  public Result<GoodsDetailVo> detail(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+
+    GoodsVo goodsVo = goodsService.getGoodsVoByGoodsId(goodsId);
+
+    long startTime = goodsVo.getStartDate().getTime();
+    long endTime = goodsVo.getEndDate().getTime();
+    long curTime = System.currentTimeMillis();
+
+    long remainSeconds = 0;
+
+    int flashSaleStatus = 0;
+    if(curTime < startTime ){ //countDown
+      flashSaleStatus = 0;
+
+      remainSeconds = (startTime - curTime) / 1000;
+
+    }else if(curTime > endTime ){// End
+      flashSaleStatus = 2;
+      remainSeconds = - 1;
+    }else{// Being
+      flashSaleStatus = 1;
+      remainSeconds = 0;
+    }
+
+
+    logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
+    logger.info("startTime = {}, endTime = {}, curTime = {}, , remainSeconds = {}", startTime, endTime, curTime, remainSeconds);
+
+    GoodsDetailVo vo = new GoodsDetailVo();
+    vo.setGoods(goodsVo);
+    vo.setUser(user);
+    vo.setRemainSeconds(remainSeconds);
+    vo.setFlashSaleStatus(flashSaleStatus);
+    return Result.success(vo);
 
   }
 }
