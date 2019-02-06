@@ -64,8 +64,8 @@
         	<div class="row">
         		<div class="form-inline">
 		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
-		        	<input id="verifyCode"  class="form-control" style="display:none"/>
-		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getMiaoshaPath()">立即秒杀</button>
+		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
+		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="doBuy()">Buy it now!</button>
         		</div>
         	</div>
         	<input type="hidden" name="goodsId"  id="goodsId" />
@@ -148,7 +148,7 @@ function getMiaoshaResult(goodsId){
 	});
 }
 
-function doMiaosha(path){
+function doBuy(){
 	$.ajax({
 		url:"/sale/do_buy",
 		// url:"/sale/"+path+"/do_buy",
@@ -158,8 +158,8 @@ function doMiaosha(path){
 		},
 		success:function(data){
 			if(data.code == 0){
-				//window.location.href="/order_detail.htm?orderId="+data.data.id;
-				getMiaoshaResult($("#goodsId").val());
+				window.location.href="/order_detail.htm?orderId="+data.data.id;
+				// getMiaoshaResult($("#goodsId").val());
 			}else{
 				layer.msg(data.msg);
 			}
