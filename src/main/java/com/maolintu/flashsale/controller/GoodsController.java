@@ -104,70 +104,74 @@ public class GoodsController {
 
   /**
    * return data by render templete
+   * 1.0 version
+   * */
+//  @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
+//  @ResponseBody
+//  public String detail2(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
+//
+//    model.addAttribute("user", user);
+//
+//    String html = redisService.get(GoodsKey.getGoodsDetail, ""+goodsId, String.class);
+//
+//    //catch
+//    if(!StringUtils.isEmpty(html)){
+//      logger.info("return page from catch");
+//      return html;
+//    }
+//
+//    GoodsVo goodsVo = goodsService.getGoodsVoByGoodsId(goodsId);
+//
+//
+//    model.addAttribute("goods", goodsVo);
+//
+//    long startTime = goodsVo.getStartDate().getTime();
+//    long endTime = goodsVo.getEndDate().getTime();
+//    long curTime = System.currentTimeMillis();
+//
+//    long remainSeconds = 0;
+//
+//    int flashSaleStatus = 0;
+//    if(curTime < startTime ){ //countDown
+//      flashSaleStatus = 0;
+//
+//      remainSeconds = (startTime - curTime) / 1000;
+//
+//
+//    }else if(curTime > endTime ){// End
+//      flashSaleStatus = 2;
+//      remainSeconds = - 1;
+//    }else{// Being
+//      flashSaleStatus = 1;
+//      remainSeconds = 0;
+//    }
+//
+//    model.addAttribute("flashSaleStatus", flashSaleStatus);
+//    model.addAttribute("remainSeconds", remainSeconds);
+//
+//    logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
+//    logger.info("startTime = {}, endTime = {}, curTime = {}, , remainSeconds = {}", startTime, endTime, curTime, remainSeconds);
+//
+////    return "goods_detail";
+//
+//    // render
+//    SpringWebContext springWebContext = new SpringWebContext(request, response, request.getServletContext(), request.getLocale(),
+//        model.asMap(), applicationContext);
+//
+//    html = thymeleafViewResolver.getTemplateEngine().process("goods_detail" , springWebContext);
+//
+//    if(!StringUtils.isEmpty(html)){
+//      redisService.set(GoodsKey.getGoodsDetail, ""+goodsId, html);
+//    }
+//    return html;
+//
+//  }
+
+
+  /**
+   * return data by render templete
    *
    * */
-  @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
-  @ResponseBody
-  public String detail2(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){
-
-    model.addAttribute("user", user);
-
-    String html = redisService.get(GoodsKey.getGoodsDetail, ""+goodsId, String.class);
-
-    //catch
-    if(!StringUtils.isEmpty(html)){
-      logger.info("return page from catch");
-      return html;
-    }
-
-    GoodsVo goodsVo = goodsService.getGoodsVoByGoodsId(goodsId);
-
-
-    model.addAttribute("goods", goodsVo);
-
-    long startTime = goodsVo.getStartDate().getTime();
-    long endTime = goodsVo.getEndDate().getTime();
-    long curTime = System.currentTimeMillis();
-
-    long remainSeconds = 0;
-
-    int flashSaleStatus = 0;
-    if(curTime < startTime ){ //countDown
-      flashSaleStatus = 0;
-
-      remainSeconds = (startTime - curTime) / 1000;
-
-
-    }else if(curTime > endTime ){// End
-      flashSaleStatus = 2;
-      remainSeconds = - 1;
-    }else{// Being
-      flashSaleStatus = 1;
-      remainSeconds = 0;
-    }
-
-    model.addAttribute("flashSaleStatus", flashSaleStatus);
-    model.addAttribute("remainSeconds", remainSeconds);
-
-    logger.info("user = {}, goods = {}, flashSaleStatus = {}, , remainSeconds = {}", user, goodsVo, flashSaleStatus, remainSeconds);
-    logger.info("startTime = {}, endTime = {}, curTime = {}, , remainSeconds = {}", startTime, endTime, curTime, remainSeconds);
-
-//    return "goods_detail";
-
-    // render
-    SpringWebContext springWebContext = new SpringWebContext(request, response, request.getServletContext(), request.getLocale(),
-        model.asMap(), applicationContext);
-
-    html = thymeleafViewResolver.getTemplateEngine().process("goods_detail" , springWebContext);
-
-    if(!StringUtils.isEmpty(html)){
-      redisService.set(GoodsKey.getGoodsDetail, ""+goodsId, html);
-    }
-    return html;
-
-  }
-
-
   @RequestMapping(value = "/detail/{goodsId}")
   @ResponseBody
   public Result<GoodsDetailVo> detail(HttpServletRequest request, HttpServletResponse response, Model model, SaleUser user, @PathVariable("goodsId") long goodsId){

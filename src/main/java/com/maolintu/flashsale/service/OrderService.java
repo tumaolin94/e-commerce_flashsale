@@ -23,7 +23,8 @@ public class OrderService {
   RedisService redisService;
 
   public FlashsaleOrder getSaleOrderByUserIdGoodsId(long userId, long goodsId) {
-    return orderDao.getSaleOrderByUserIdGoodsId(userId, goodsId);
+//    return orderDao.getSaleOrderByUserIdGoodsId(userId, goodsId);
+    return redisService.get(OrderKey.getSaleOrderByUidGid, userId+"_"+goodsId, FlashsaleOrder.class);
 
   }
 
@@ -39,13 +40,20 @@ public class OrderService {
     orderInfo.setOrderChannel(1);
     orderInfo.setStatus(0);
     orderInfo.setUserId(user.getId());
-    long orderId = orderDao.insert(orderInfo);
+    long orderId = orderDao.insert(orderInfo); //
     FlashsaleOrder flashsaleOrder = new FlashsaleOrder();
     flashsaleOrder.setGoodsId(goods.getId());
-    flashsaleOrder.setOrderId(orderInfo.getId());
+    flashsaleOrder.setOrderId(orderId);
     flashsaleOrder.setUserId(user.getId());
     orderDao.insertFlashsaleOrder(flashsaleOrder);
 
+    redisService.set(OrderKey.getSaleOrderByUidGid, user.getId()+"_"+goods.getId(), flashsaleOrder);
+
     return orderInfo;
+  }
+
+
+  public OrderInfo getOrderById(long orderId) {
+    return orderDao.getOrderById(orderId);
   }
 }
