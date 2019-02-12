@@ -1,6 +1,7 @@
 package com.maolintu.flashsale.controller;
 
 import com.maolintu.flashsale.domain.User;
+import com.maolintu.flashsale.rabbitmq.MQSender;
 import com.maolintu.flashsale.redis.UserKey;
 import com.maolintu.flashsale.result.CodeMsg;
 import com.maolintu.flashsale.result.Result;
@@ -23,6 +24,9 @@ public class SampleController {
 
   @Autowired
   RedisService redisService;
+
+  @Autowired
+  MQSender sender;
 
   @RequestMapping("/thymeleaf")
   public String thymeleaf(Model model){
@@ -65,6 +69,14 @@ public class SampleController {
     user.setName("1111");
     redisService.set(UserKey.getById, ""+1, user);//UserKey:id1
     return Result.success(true);
+  }
+
+  //
+  @RequestMapping("/mq")
+  @ResponseBody
+  public Result<String> mq() {
+    sender.send("hello,");
+    return Result.success("Hello，world");
   }
 
 //  @RequestMapping("/redis/set")
