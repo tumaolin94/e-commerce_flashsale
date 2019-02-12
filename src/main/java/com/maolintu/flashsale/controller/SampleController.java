@@ -71,7 +71,6 @@ public class SampleController {
     return Result.success(true);
   }
 
-  //
   @RequestMapping("/mq")
   @ResponseBody
   public Result<String> mq() {
@@ -79,6 +78,13 @@ public class SampleController {
     return Result.success("Hello，world");
   }
 
+
+  @RequestMapping("/mq/topic")
+  @ResponseBody
+  public Result<String> mqTopic() {
+    sender.sendTopic("hello,");
+    return Result.success("Hello，world");
+  }
 //  @RequestMapping("/redis/set")
 //  @ResponseBody
 //  public Result<Boolean> redisSet(@RequestParam("key") String key, @RequestParam("value") String value) {
