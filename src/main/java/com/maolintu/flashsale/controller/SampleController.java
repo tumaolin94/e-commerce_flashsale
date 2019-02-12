@@ -85,6 +85,20 @@ public class SampleController {
     sender.sendTopic("hello,");
     return Result.success("Hello，world");
   }
+
+  @RequestMapping("/mq/fanout")
+  @ResponseBody
+  public Result<String> mqFanout() {
+    sender.sendFanout("hello,");
+    return Result.success("Hello，world");
+  }
+
+  @RequestMapping("/mq/header")
+  @ResponseBody
+  public Result<String> mqHeader() {
+    sender.sendHeader("hello,");
+    return Result.success("Hello，world");
+  }
 //  @RequestMapping("/redis/set")
 //  @ResponseBody
 //  public Result<Boolean> redisSet(@RequestParam("key") String key, @RequestParam("value") String value) {
