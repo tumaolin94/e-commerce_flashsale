@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -102,7 +103,22 @@ public class FlashSaleController implements InitializingBean {
 
   }
 
-
+  /**
+   * orderId：success
+   * -1：fail
+   * 0： in queue
+   * */
+  @RequestMapping(value="/result", method= RequestMethod.GET)
+  @ResponseBody
+  public Result<Long> miaoshaResult(Model model,SaleUser user,
+      @RequestParam("goodsId")long goodsId) {
+    model.addAttribute("user", user);
+    if(user == null) {
+      return Result.error(CodeMsg.SESSION_ERROR);
+    }
+    long result  =flashSaleService.getResult(user.getId(), goodsId);
+    return Result.success(result);
+  }
 
   /**
    *

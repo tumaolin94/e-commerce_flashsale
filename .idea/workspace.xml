@@ -7,17 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ddd548d2-0846-4aae-b162-45f3ba34b638" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/FlashSaleMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/redis/SaleKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQSender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/redis/GoodsKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/redis/GoodsKey.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/goods_detail.htm" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/goods_detail.htm" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -44,7 +35,7 @@
           <entry key="gitignore" value="29" />
           <entry key="htm" value="531" />
           <entry key="html" value="730" />
-          <entry key="java" value="9525" />
+          <entry key="java" value="9586" />
           <entry key="js" value="44" />
           <entry key="properties" value="194" />
           <entry key="sql" value="285" />
@@ -55,7 +46,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="1261" />
-          <entry key="JAVA" value="9525" />
+          <entry key="JAVA" value="9586" />
           <entry key="JavaScript" value="44" />
           <entry key="PLAIN_TEXT" value="141" />
           <entry key="Properties" value="194" />
@@ -69,7 +60,7 @@
           <entry key="gitignore" value="1" />
           <entry key="htm" value="4" />
           <entry key="html" value="26" />
-          <entry key="java" value="169" />
+          <entry key="java" value="170" />
           <entry key="jpg" value="2" />
           <entry key="js" value="3" />
           <entry key="png" value="4" />
@@ -84,7 +75,7 @@
           <entry key="CLASS" value="6" />
           <entry key="HTML" value="30" />
           <entry key="Image" value="6" />
-          <entry key="JAVA" value="169" />
+          <entry key="JAVA" value="170" />
           <entry key="JavaScript" value="3" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="Properties" value="6" />
@@ -134,10 +125,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/resources/static/goods_detail.htm">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="86">
+            <state relative-caret-position="63">
               <caret line="117" column="14" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
               <folding>
                 <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#td#3;n#tr#2;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -149,8 +140,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/OrderService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="42" column="4" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="4" />
+            <state relative-caret-position="195">
+              <caret line="24" column="23" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -164,14 +155,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="56" column="23" selection-start-line="56" selection-start-column="23" selection-end-line="56" selection-end-column="23" />
+            <state relative-caret-position="358">
+              <caret line="118" column="44" selection-start-line="118" selection-start-column="44" selection-end-line="118" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-9">
+              <caret line="23" column="12" lean-forward="true" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -295,10 +295,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQSender.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/rabbitmq/MQReceiver.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/OrderService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/redis/SaleKey.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java" />
         <option value="$PROJECT_DIR$/src/main/resources/static/goods_detail.htm" />
+        <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java" />
       </list>
     </option>
   </component>
@@ -353,6 +353,30 @@
               <item name="java_spike" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spike" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_spike" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="flashsale" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spike" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_spike" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="flashsale" type="462c0819:PsiDirectoryNode" />
+              <item name="service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spike" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_spike" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -381,7 +405,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/richardtu/Documents/gitfiles/java_spike/src/main/java/com/maolintu/flashsale/rabbitmq/MQSender.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550041774668" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1550041978211" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -500,12 +524,12 @@
       <updated>1547245394094</updated>
       <workItem from="1547245397099" duration="18990000" />
       <workItem from="1548106785003" duration="29491000" />
-      <workItem from="1549432011075" duration="13874000" />
+      <workItem from="1549432011075" duration="14082000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67817000" />
+    <option name="totallyTimeSpent" value="68025000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1009,36 +1033,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/goods_detail.htm">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="41" column="28" selection-start-line="41" selection-start-column="28" selection-end-line="41" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="56" column="23" selection-start-line="56" selection-start-column="23" selection-end-line="56" selection-end-column="23" />
+        <state relative-caret-position="63">
+          <caret line="117" column="14" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#td#3;n#tr#2;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/OrderService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="42" column="4" selection-start-line="42" selection-start-column="4" selection-end-line="42" selection-end-column="4" />
+        <state relative-caret-position="195">
+          <caret line="24" column="23" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/goods_detail.htm">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/service/FlashSaleService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="86">
-          <caret line="117" column="14" selection-start-line="117" selection-start-column="14" selection-end-line="117" selection-end-column="14" />
+        <state relative-caret-position="-9">
+          <caret line="23" column="12" lean-forward="true" selection-start-line="23" selection-start-column="12" selection-end-line="23" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/maolintu/flashsale/controller/FlashSaleController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="118" column="44" selection-start-line="118" selection-start-column="44" selection-end-line="118" selection-end-column="44" />
           <folding>
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#td#3;n#tr#2;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

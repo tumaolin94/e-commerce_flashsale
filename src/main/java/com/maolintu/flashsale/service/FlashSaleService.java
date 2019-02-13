@@ -1,6 +1,7 @@
 package com.maolintu.flashsale.service;
 
 import com.maolintu.flashsale.dao.GoodsDao;
+import com.maolintu.flashsale.domain.FlashsaleOrder;
 import com.maolintu.flashsale.domain.Goods;
 import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.domain.SaleUser;
@@ -38,7 +39,25 @@ public class FlashSaleService {
 
   }
 
+  public long getResult(Long userId, long goodsId) {
+    FlashsaleOrder order = orderService.getSaleOrderByUserIdGoodsId(userId, goodsId);
+    if(order != null) {//success
+      return order.getOrderId();
+    }else {
+      boolean isOver = getGoodsOver(goodsId);
+      if(isOver) {
+        return -1;
+      }else {
+        return 0;
+      }
+    }
+  }
+
   private void setGoodsOver(Long goodsId) {
     redisService.set(SaleKey.isGoodsOver, ""+goodsId, true);
+  }
+
+  private boolean getGoodsOver(long goodsId) {
+    return redisService.exists(SaleKey.isGoodsOver, ""+goodsId);
   }
 }
