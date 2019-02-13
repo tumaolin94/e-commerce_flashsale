@@ -112,10 +112,10 @@ function getMiaoshaPath(){
 	});
 }
 
-function getMiaoshaResult(goodsId){
+function getResult(goodsId){
 	g_showLoading();
 	$.ajax({
-		url:"/miaosha/result",
+		url:"/sale/result",
 		type:"GET",
 		data:{
 			goodsId:$("#goodsId").val(),
@@ -158,8 +158,8 @@ function doBuy(){
 		},
 		success:function(data){
 			if(data.code == 0){
-				window.location.href="/order_detail.htm?orderId="+data.data.id;
-				// getMiaoshaResult($("#goodsId").val());
+				// window.location.href="/order_detail.htm?orderId="+data.data.id;
+				getResult($("#goodsId").val());
 			}else{
 				layer.msg(data.msg);
 			}

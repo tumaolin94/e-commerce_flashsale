@@ -40,10 +40,10 @@ public class OrderService {
     orderInfo.setOrderChannel(1);
     orderInfo.setStatus(0);
     orderInfo.setUserId(user.getId());
-    long orderId = orderDao.insert(orderInfo); //
+    orderDao.insert(orderInfo); //
     FlashsaleOrder flashsaleOrder = new FlashsaleOrder();
     flashsaleOrder.setGoodsId(goods.getId());
-    flashsaleOrder.setOrderId(orderId);
+    flashsaleOrder.setOrderId(orderInfo.getGoodsId());
     flashsaleOrder.setUserId(user.getId());
     orderDao.insertFlashsaleOrder(flashsaleOrder);
 

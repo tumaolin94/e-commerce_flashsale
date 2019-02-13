@@ -47,4 +47,9 @@ public class MQSender {
   }
 
 
+  public void sendFlashSaleMessage(FlashSaleMessage message) {
+    String msg = RedisService.beanToString(message);
+    log.info("sendFlashSaleMessage message:"+msg);
+    amqpTemplate.convertAndSend(MQConfig.SALE_QUEUE, msg);
+  }
 }

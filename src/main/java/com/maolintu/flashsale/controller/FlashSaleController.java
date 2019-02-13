@@ -4,6 +4,9 @@ package com.maolintu.flashsale.controller;
 import com.maolintu.flashsale.domain.FlashsaleOrder;
 import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.domain.SaleUser;
+import com.maolintu.flashsale.rabbitmq.FlashSaleMessage;
+import com.maolintu.flashsale.rabbitmq.MQSender;
+import com.maolintu.flashsale.redis.GoodsKey;
 import com.maolintu.flashsale.result.CodeMsg;
 import com.maolintu.flashsale.result.Result;
 import com.maolintu.flashsale.service.FlashSaleService;
@@ -12,8 +15,10 @@ import com.maolintu.flashsale.service.OrderService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.vo.GoodsVo;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/sale")
-public class FlashSaleController {
+public class FlashSaleController implements InitializingBean {
 
 
   @Autowired
@@ -42,11 +47,14 @@ public class FlashSaleController {
   @Autowired
   FlashSaleService flashSaleService;
 
+  @Autowired
+  MQSender sender;
+
   private static Logger logger = LoggerFactory.getLogger(FlashSaleController.class);
 
   @PostMapping("/do_buy")
   @ResponseBody
-  public Result<OrderInfo> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
+  public Result<Integer> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
 
     model.addAttribute("user", user);
     if(user == null){
@@ -54,30 +62,60 @@ public class FlashSaleController {
       return Result.error(CodeMsg.SESSION_ERROR);
     }
 
-    GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-    int stock = goods.getStockCount();
-    if(stock <= 0){
-//      model.addAttribute("errmsg", CodeMsg.SALE_OVER.getMsg());
-//      return "buy_fail";
+    long stock = redisService.decr(GoodsKey.getGoodsStock, "" + goodsId);
+
+    // get stock by redis
+    if(stock < 0){
       return Result.error(CodeMsg.SALE_OVER);
     }
-
     FlashsaleOrder order = orderService.getSaleOrderByUserIdGoodsId(user.getId(), goodsId);
 
     if(order != null){
-//      model.addAttribute("errmsg", CodeMsg.REPEATE_ORDER.getMsg());
-//      return "buy_fail";
       return Result.error(CodeMsg.REPEATE_ORDER);
     }
 
-    //decrease stock, make an order
-    OrderInfo orderInfo = flashSaleService.completeOrder(user, goods);
+    //enque
+    FlashSaleMessage message = new FlashSaleMessage();
 
-//    model.addAttribute("orderInfo", orderInfo);
-//    model.addAttribute("goods", goods);
+    message.setUser(user);
+    message.setGoodsId(goodsId);
+    sender.sendFlashSaleMessage(message);
 
-//    return "order_detail2";
-    return Result.success(orderInfo);
+    return Result.success(0);
+//    GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
+//    int stock = goods.getStockCount();
+//    if(stock <= 0){
+//      return Result.error(CodeMsg.SALE_OVER);
+//    }
+//
+//    FlashsaleOrder order = orderService.getSaleOrderByUserIdGoodsId(user.getId(), goodsId);
+//
+//    if(order != null){
+//      return Result.error(CodeMsg.REPEATE_ORDER);
+//    }
+//
+//    //decrease stock, make an order
+//    OrderInfo orderInfo = flashSaleService.completeOrder(user, goods);
+//
+//
+//    return Result.success(orderInfo);
+
   }
 
+
+
+  /**
+   *
+   * Initialization
+   * */
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    List<GoodsVo> goodsList = goodsService.listGoodsVo();
+    if(goodsList == null){
+      return;
+    }
+    for(GoodsVo goodsVo: goodsList){
+      redisService.set(GoodsKey.getGoodsStock,""+ goodsVo.getId(), goodsVo.getStockCount());
+    }
+  }
 }

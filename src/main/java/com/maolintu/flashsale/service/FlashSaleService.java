@@ -4,6 +4,7 @@ import com.maolintu.flashsale.dao.GoodsDao;
 import com.maolintu.flashsale.domain.Goods;
 import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.domain.SaleUser;
+import com.maolintu.flashsale.redis.SaleKey;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,25 @@ public class FlashSaleService {
   @Autowired
   OrderService orderService;
 
+  @Autowired
+  RedisService redisService;
 
   @Transactional
   public OrderInfo completeOrder(SaleUser user, GoodsVo goods) {
 
-    goodsService.reduceStock(goods);
+    boolean success = goodsService.reduceStock(goods);
+    if(success){
+      OrderInfo orderInfo = orderService.createOrder(user, goods);
 
-    OrderInfo orderInfo = orderService.createOrder(user, goods);
+      return orderInfo;
+    }else{
+      setGoodsOver(goods.getId());
+      return null;
+    }
 
-    return orderInfo;
+  }
+
+  private void setGoodsOver(Long goodsId) {
+    redisService.set(SaleKey.isGoodsOver, ""+goodsId, true);
   }
 }
