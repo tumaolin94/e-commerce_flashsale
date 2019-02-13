@@ -43,7 +43,7 @@ public class OrderService {
     orderDao.insert(orderInfo); //
     FlashsaleOrder flashsaleOrder = new FlashsaleOrder();
     flashsaleOrder.setGoodsId(goods.getId());
-    flashsaleOrder.setOrderId(orderInfo.getGoodsId());
+    flashsaleOrder.setOrderId(orderInfo.getId());
     flashsaleOrder.setUserId(user.getId());
     orderDao.insertFlashsaleOrder(flashsaleOrder);
 

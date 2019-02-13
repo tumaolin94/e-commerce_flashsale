@@ -110,7 +110,7 @@ public class FlashSaleController implements InitializingBean {
    * */
   @RequestMapping(value="/result", method= RequestMethod.GET)
   @ResponseBody
-  public Result<Long> miaoshaResult(Model model,SaleUser user,
+  public Result<Long> flashSaleResult(Model model,SaleUser user,
       @RequestParam("goodsId")long goodsId) {
     model.addAttribute("user", user);
     if(user == null) {

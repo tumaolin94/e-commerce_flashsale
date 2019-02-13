@@ -125,9 +125,9 @@ function getResult(goodsId){
 				var result = data.data;
 				if(result < 0){
 					layer.msg("Buy fails!");
-				}else if(result == 0){//继续轮询
+				}else if(result == 0){//polling
 					setTimeout(function(){
-						getMiaoshaResult(goodsId);
+            getResult(goodsId);
 					}, 200);
 				}else{
 					layer.confirm("Con! You bought it! See order?", {btn:["Yes","No"]},
