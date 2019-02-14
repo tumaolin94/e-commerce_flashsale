@@ -15,7 +15,9 @@ import com.maolintu.flashsale.service.OrderService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.vo.GoodsVo;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -53,6 +55,8 @@ public class FlashSaleController implements InitializingBean {
 
   private static Logger logger = LoggerFactory.getLogger(FlashSaleController.class);
 
+  private Map<Long, Boolean> localOverMap = new HashMap<>();
+
   @PostMapping("/do_buy")
   @ResponseBody
   public Result<Integer> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
@@ -63,10 +67,15 @@ public class FlashSaleController implements InitializingBean {
       return Result.error(CodeMsg.SESSION_ERROR);
     }
 
+    if(localOverMap.get(goodsId)){
+      return Result.error(CodeMsg.SALE_OVER);
+    }
+
     long stock = redisService.decr(GoodsKey.getGoodsStock, "" + goodsId);
 
     // get stock by redis
     if(stock < 0){
+      localOverMap.put(goodsId, true);
       return Result.error(CodeMsg.SALE_OVER);
     }
     FlashsaleOrder order = orderService.getSaleOrderByUserIdGoodsId(user.getId(), goodsId);
@@ -132,6 +141,7 @@ public class FlashSaleController implements InitializingBean {
     }
     for(GoodsVo goodsVo: goodsList){
       redisService.set(GoodsKey.getGoodsStock,""+ goodsVo.getId(), goodsVo.getStockCount());
+      localOverMap.put(goodsVo.getId(), false);
     }
   }
 }
