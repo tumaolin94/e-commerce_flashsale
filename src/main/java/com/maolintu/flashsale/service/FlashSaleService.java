@@ -60,4 +60,9 @@ public class FlashSaleService {
   private boolean getGoodsOver(long goodsId) {
     return redisService.exists(SaleKey.isGoodsOver, ""+goodsId);
   }
+
+  public void reset(List<GoodsVo> goodsList) {
+    goodsService.resetStock(goodsList);
+    orderService.deleteOrders();
+  }
 }

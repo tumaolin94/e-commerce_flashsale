@@ -4,6 +4,7 @@ import com.maolintu.flashsale.domain.FlashsaleOrder;
 import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.List;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,4 +27,10 @@ public interface OrderDao {
 
   @Select("select * from order_info where id = #{orderId}")
   OrderInfo getOrderById(@Param("orderId") long orderId);
+
+  @Delete("delete from order_info")
+  public void deleteOrders();
+
+  @Delete("delete from flashsale_order")
+  public void deleteFlashSaleOrders();
 }

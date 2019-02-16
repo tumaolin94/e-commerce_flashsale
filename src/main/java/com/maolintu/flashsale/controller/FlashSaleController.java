@@ -7,6 +7,8 @@ import com.maolintu.flashsale.domain.SaleUser;
 import com.maolintu.flashsale.rabbitmq.FlashSaleMessage;
 import com.maolintu.flashsale.rabbitmq.MQSender;
 import com.maolintu.flashsale.redis.GoodsKey;
+import com.maolintu.flashsale.redis.OrderKey;
+import com.maolintu.flashsale.redis.SaleKey;
 import com.maolintu.flashsale.result.CodeMsg;
 import com.maolintu.flashsale.result.Result;
 import com.maolintu.flashsale.service.FlashSaleService;
@@ -128,6 +130,21 @@ public class FlashSaleController implements InitializingBean {
     }
     long result  =flashSaleService.getResult(user.getId(), goodsId);
     return Result.success(result);
+  }
+
+  @RequestMapping(value="/reset", method=RequestMethod.GET)
+  @ResponseBody
+  public Result<Boolean> reset(Model model) {
+    List<GoodsVo> goodsList = goodsService.listGoodsVo();
+    for(GoodsVo goods : goodsList) {
+      goods.setStockCount(10);
+      redisService.set(GoodsKey.getGoodsStock, ""+goods.getId(), 10);
+      localOverMap.put(goods.getId(), false);
+    }
+    redisService.delete(OrderKey.getSaleOrderByUidGid);
+    redisService.delete(SaleKey.isGoodsOver);
+    flashSaleService.reset(goodsList);
+    return Result.success(true);
   }
 
   /**
