@@ -62,6 +62,7 @@ public class FlashSaleController implements InitializingBean {
   public Result<Integer> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
 
     model.addAttribute("user", user);
+    logger.info("user = {}", user);
     if(user == null){
 //      return "login";
       return Result.error(CodeMsg.SESSION_ERROR);

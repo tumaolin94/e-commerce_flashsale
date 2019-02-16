@@ -22,20 +22,9 @@ import org.slf4j.LoggerFactory;
 public class UserUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(UserUtil.class);
-	private static void createUser(int count) throws Exception {
-		List<SaleUser> users = new ArrayList<SaleUser>(count);
-		//Genereate users
-		for(int i=0;i<count;i++) {
-			SaleUser user = new SaleUser();
-			user.setId(13000000000L+i);
-			user.setLoginCount(1);
-			user.setNickname("user"+i);
-			user.setRegisterDate(new Date());
-			user.setSalt("1a2b3c");
-			user.setPassword(MD5Util.inputPassToDBPass("123456", user.getSalt()));
-			users.add(user);
-		}
-		System.out.println("create user");
+
+	private static void insertDB(List<SaleUser> users) throws Exception{
+		logger.info("Insert users");
 		//insert database
 		Connection conn = DBUtil.getConn();
 		String sql = "insert into users(login_count, nickname, register_date, salt, password, id)values(?,?,?,?,?,?)";
@@ -54,7 +43,23 @@ public class UserUtil {
 		pstmt.close();
 		conn.close();
 		logger.info("insert to db");
-		//login, generate token
+	}
+	private static void createUser(int count) throws Exception {
+		List<SaleUser> users = new ArrayList<SaleUser>(count);
+		//Genereate users
+		for(int i=0;i<count;i++) {
+			SaleUser user = new SaleUser();
+			user.setId(13000000000L+i);
+			user.setLoginCount(1);
+			user.setNickname("user"+i);
+			user.setRegisterDate(new Date());
+			user.setSalt("1a2b3c");
+			user.setPassword(MD5Util.inputPassToDBPass("123456", user.getSalt()));
+			users.add(user);
+		}
+		//insert database
+		insertDB(users);
+
 		String urlString = "http://localhost:8080/login/do_login";
 		File file = new File("tokens.txt");
 		if(file.exists()) {
