@@ -6,6 +6,7 @@ import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.domain.SaleUser;
 import com.maolintu.flashsale.rabbitmq.FlashSaleMessage;
 import com.maolintu.flashsale.rabbitmq.MQSender;
+import com.maolintu.flashsale.redis.AccessKey;
 import com.maolintu.flashsale.redis.GoodsKey;
 import com.maolintu.flashsale.redis.OrderKey;
 import com.maolintu.flashsale.redis.SaleKey;
@@ -141,6 +142,18 @@ public class FlashSaleController implements InitializingBean {
   ) {
     if(user == null) {
       return Result.error(CodeMsg.SESSION_ERROR);
+    }
+
+    //visit times
+    String uri = request.getRequestURI();
+    String key = uri + "_" + user.getId();
+    Integer count = redisService.get(AccessKey.access, key, Integer.class);
+    if(count == null) {
+      redisService.set(AccessKey.access, key, 1);
+    }else if( count < 5){
+      redisService.incr(AccessKey.access, key);
+    }else{
+      return Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
     }
 
     if(StringUtils.isEmpty(verifyCode)|| !StringUtils.isNumeric(verifyCode)){
