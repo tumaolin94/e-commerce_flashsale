@@ -96,7 +96,7 @@ function getSalePath(){
 		type:"GET",
 		data:{
 			goodsId:goodsId,
-			// verifyCode:$("#verifyCode").val()
+			verifyCode:$("#verifyCode").val()
 		},
 		success:function(data){
 			if(data.code == 0){
@@ -239,6 +239,10 @@ function countDown(){
 		$("#verifyCodeImg").hide();
 		$("#verifyCode").hide();
 	}
+}
+
+function refreshVerifyCode(){
+  $("#verifyCodeImg").attr("src", "/sale/verifyCode?goodsId="+$("#goodsId").val()+"&timestamp="+new Date().getTime());
 }
 
 </script>

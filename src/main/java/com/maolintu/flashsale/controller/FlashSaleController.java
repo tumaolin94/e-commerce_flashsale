@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -135,12 +136,21 @@ public class FlashSaleController implements InitializingBean {
   @RequestMapping(value="/path", method=RequestMethod.GET)
   @ResponseBody
   public Result<String> getFlashSalePath(HttpServletRequest request, SaleUser user,
-      @RequestParam("goodsId")long goodsId
+      @RequestParam("goodsId")long goodsId,
+      @RequestParam(value = "verifyCode", required = false)String verifyCode
   ) {
     if(user == null) {
       return Result.error(CodeMsg.SESSION_ERROR);
     }
 
+    if(StringUtils.isEmpty(verifyCode)|| !StringUtils.isNumeric(verifyCode)){
+      return Result.error(CodeMsg.REQUEST_ILLEGAL);
+    }
+
+    boolean check = flashSaleService.checkVerifyCode(user, goodsId, Integer.parseInt(verifyCode));
+    if(!check) {
+      return Result.error(CodeMsg.REQUEST_ILLEGAL);
+    }
     String path  =flashSaleService.createFlashSalePath(user, goodsId);
 
     return Result.success(path);

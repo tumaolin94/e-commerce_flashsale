@@ -125,7 +125,7 @@ public class FlashSaleService {
     // generate a random code
     String verifyCode = generateVerifyCode(rdm);
     g.setColor(new Color(0, 100, 0));
-    g.setFont(new Font("Candara", Font.BOLD, 24));
+    g.setFont(new Font("Candara", Font.BOLD, 20));
     g.drawString(verifyCode, 8, 24);
     g.dispose();
     //save to redis
@@ -157,9 +157,15 @@ public class FlashSaleService {
     return exp;
   }
 
-   public static void main(String[] args){
-    String str = generateVerifyCode(new Random());
-    System.out.println(str);
-    System.out.println(calc(str));
-   }
+  public boolean checkVerifyCode(SaleUser user, long goodsId, int verifyCode) {
+    if(user == null || goodsId <=0) {
+      return false;
+    }
+    Integer codeOld = redisService.get(SaleKey.getSaleVerifyCode, user.getId()+","+goodsId, Integer.class);
+    if(codeOld == null || codeOld - verifyCode != 0 ) {
+      return false;
+    }
+    redisService.delete(SaleKey.getSaleVerifyCode, user.getId()+","+goodsId);
+    return true;
+  }
 }
