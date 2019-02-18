@@ -65,7 +65,7 @@
         		<div class="form-inline">
 		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
 		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
-		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="doBuy()">Buy it now!</button>
+		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getSalePath()">Buy it now!</button>
         		</div>
         	</div>
         	<input type="hidden" name="goodsId"  id="goodsId" />
@@ -88,20 +88,20 @@
 </body>
 <script>
 
-function getMiaoshaPath(){
+function getSalePath(){
 	var goodsId = $("#goodsId").val();
 	g_showLoading();
 	$.ajax({
-		url:"/miaosha/path",
+		url:"/sale/path",
 		type:"GET",
 		data:{
 			goodsId:goodsId,
-			verifyCode:$("#verifyCode").val()
+			// verifyCode:$("#verifyCode").val()
 		},
 		success:function(data){
 			if(data.code == 0){
 				var path = data.data;
-				doMiaosha(path);
+				doBuy(path);
 			}else{
 				layer.msg(data.msg);
 			}
@@ -148,10 +148,10 @@ function getResult(goodsId){
 	});
 }
 
-function doBuy(){
+function doBuy(path){
 	$.ajax({
-		url:"/sale/do_buy",
-		// url:"/sale/"+path+"/do_buy",
+		// url:"/sale/do_buy",
+		url:"/sale/"+path+"/do_buy",
 		type:"POST",
 		data:{
 			goodsId:$("#goodsId").val()

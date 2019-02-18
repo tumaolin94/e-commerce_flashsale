@@ -16,16 +16,20 @@ import com.maolintu.flashsale.service.GoodsService;
 import com.maolintu.flashsale.service.OrderService;
 import com.maolintu.flashsale.service.RedisService;
 import com.maolintu.flashsale.service.SaleUserService;
+import com.maolintu.flashsale.util.MD5Util;
+import com.maolintu.flashsale.util.UUIDUtil;
 import com.maolintu.flashsale.vo.GoodsVo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,9 +63,10 @@ public class FlashSaleController implements InitializingBean {
 
   private Map<Long, Boolean> localOverMap = new HashMap<>();
 
-  @PostMapping("/do_buy")
+  @PostMapping("/{path}/do_buy")
   @ResponseBody
-  public Result<Integer> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId){
+  public Result<Integer> doBuy(Model model, SaleUser user, @RequestParam("goodsId") long goodsId,
+      @PathVariable("path") String path){
 
     model.addAttribute("user", user);
     logger.info("user = {}", user);
@@ -69,6 +74,14 @@ public class FlashSaleController implements InitializingBean {
 //      return "login";
       return Result.error(CodeMsg.SESSION_ERROR);
     }
+
+    // check path
+    boolean isPath = flashSaleService.checkPath(user, goodsId, path);
+
+    if(!isPath){
+      return Result.error(CodeMsg.REQUEST_ILLEGAL);
+    }
+
 
     if(localOverMap.get(goodsId)){
       return Result.error(CodeMsg.SALE_OVER);
@@ -113,6 +126,20 @@ public class FlashSaleController implements InitializingBean {
 //
 //    return Result.success(orderInfo);
 
+  }
+
+  @RequestMapping(value="/path", method=RequestMethod.GET)
+  @ResponseBody
+  public Result<String> getFlashSalePath(HttpServletRequest request, SaleUser user,
+      @RequestParam("goodsId")long goodsId
+  ) {
+    if(user == null) {
+      return Result.error(CodeMsg.SESSION_ERROR);
+    }
+
+    String path  =flashSaleService.createFlashSalePath(user, goodsId);
+
+    return Result.success(path);
   }
 
   /**
