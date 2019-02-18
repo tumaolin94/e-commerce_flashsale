@@ -1,6 +1,7 @@
 package com.maolintu.flashsale.controller;
 
 
+import com.maolintu.flashsale.access.AccessLimit;
 import com.maolintu.flashsale.domain.FlashsaleOrder;
 import com.maolintu.flashsale.domain.OrderInfo;
 import com.maolintu.flashsale.domain.SaleUser;
@@ -114,26 +115,11 @@ public class FlashSaleController implements InitializingBean {
     sender.sendFlashSaleMessage(message);
 
     return Result.success(0);
-//    GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-//    int stock = goods.getStockCount();
-//    if(stock <= 0){
-//      return Result.error(CodeMsg.SALE_OVER);
-//    }
-//
-//    FlashsaleOrder order = orderService.getSaleOrderByUserIdGoodsId(user.getId(), goodsId);
-//
-//    if(order != null){
-//      return Result.error(CodeMsg.REPEATE_ORDER);
-//    }
-//
-//    //decrease stock, make an order
-//    OrderInfo orderInfo = flashSaleService.completeOrder(user, goods);
-//
-//
-//    return Result.success(orderInfo);
+
 
   }
 
+  @AccessLimit(seconds=5, maxCount=5, needLogin=true)
   @RequestMapping(value="/path", method=RequestMethod.GET)
   @ResponseBody
   public Result<String> getFlashSalePath(HttpServletRequest request, SaleUser user,
@@ -142,18 +128,6 @@ public class FlashSaleController implements InitializingBean {
   ) {
     if(user == null) {
       return Result.error(CodeMsg.SESSION_ERROR);
-    }
-
-    //visit times
-    String uri = request.getRequestURI();
-    String key = uri + "_" + user.getId();
-    Integer count = redisService.get(AccessKey.access, key, Integer.class);
-    if(count == null) {
-      redisService.set(AccessKey.access, key, 1);
-    }else if( count < 5){
-      redisService.incr(AccessKey.access, key);
-    }else{
-      return Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
     }
 
     if(StringUtils.isEmpty(verifyCode)|| !StringUtils.isNumeric(verifyCode)){

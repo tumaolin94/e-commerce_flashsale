@@ -1,5 +1,6 @@
 package com.maolintu.flashsale.config;
 
+import com.maolintu.flashsale.access.UserContext;
 import com.maolintu.flashsale.controller.GoodsController;
 import com.maolintu.flashsale.domain.SaleUser;
 import com.maolintu.flashsale.service.SaleUserService;
@@ -32,37 +33,46 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
-		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-		HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
-
-		String paramToken = request.getParameter(SaleUserService.COOKIE_NAME_TOKEN);
-//		logger.info("resolveArgument () paramToken = {}", paramToken);
-		String cookieToken = getcookieValue(request, SaleUserService.COOKIE_NAME_TOKEN);
-		if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
-			return null;
-		}
-
-		String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
-		SaleUser user = userService.getByToken(response, token);
-
-		return user;
+		return UserContext.getUser();
 	}
-
-	private String getcookieValue(HttpServletRequest request, String cookieNameToken) {
-		Cookie[] cookies = request.getCookies();
-		if(cookies == null || cookies.length <= 0){
-			return null;
-		}
-		logger.info("cookies size = {}", cookies.length);
-		for(Cookie cookie: cookies){
-			if(cookie.getName().equals(cookieNameToken)){
-				return cookie.getValue();
-			}
-		}
-
-		return null;
-	}
+//	public boolean supportsParameter(MethodParameter parameter) {
+//		Class<?> clazz = parameter.getParameterType();
+//		return clazz==SaleUser.class;
+//	}
+//
+//	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+//			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+//
+//		HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
+//		HttpServletResponse response = webRequest.getNativeResponse(HttpServletResponse.class);
+//
+//		String paramToken = request.getParameter(SaleUserService.COOKIE_NAME_TOKEN);
+////		logger.info("resolveArgument () paramToken = {}", paramToken);
+//		String cookieToken = getcookieValue(request, SaleUserService.COOKIE_NAME_TOKEN);
+//		if(StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)){
+//			return null;
+//		}
+//
+//		String token = StringUtils.isEmpty(paramToken)?cookieToken:paramToken;
+//		SaleUser user = userService.getByToken(response, token);
+//
+//		return user;
+//	}
+//
+//	private String getcookieValue(HttpServletRequest request, String cookieNameToken) {
+//		Cookie[] cookies = request.getCookies();
+//		if(cookies == null || cookies.length <= 0){
+//			return null;
+//		}
+//		logger.info("cookies size = {}", cookies.length);
+//		for(Cookie cookie: cookies){
+//			if(cookie.getName().equals(cookieNameToken)){
+//				return cookie.getValue();
+//			}
+//		}
+//
+//		return null;
+//	}
 
 
 }
