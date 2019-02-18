@@ -19,10 +19,14 @@ import com.maolintu.flashsale.service.SaleUserService;
 import com.maolintu.flashsale.util.MD5Util;
 import com.maolintu.flashsale.util.UUIDUtil;
 import com.maolintu.flashsale.vo.GoodsVo;
+import java.awt.image.BufferedImage;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -173,6 +177,27 @@ public class FlashSaleController implements InitializingBean {
     flashSaleService.reset(goodsList);
     return Result.success(true);
   }
+
+  @RequestMapping(value="/verifyCode", method=RequestMethod.GET)
+  @ResponseBody
+  public Result<String> getMiaoshaVerifyCod(HttpServletResponse response,SaleUser user,
+      @RequestParam("goodsId")long goodsId) {
+    if(user == null) {
+      return Result.error(CodeMsg.SESSION_ERROR);
+    }
+    try {
+      BufferedImage image  = flashSaleService.createVerifyCode(user, goodsId);
+      OutputStream out = response.getOutputStream();
+      ImageIO.write(image, "JPEG", out);
+      out.flush();
+      out.close();
+      return null;
+    }catch(Exception e) {
+      e.printStackTrace();
+      return Result.error(CodeMsg.BUY_FAIL);
+    }
+  }
+
 
   /**
    *
