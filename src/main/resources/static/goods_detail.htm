@@ -64,7 +64,7 @@
         	<div class="row">
         		<div class="form-inline">
 		        	<img id="verifyCodeImg" width="80" height="32"  style="display:none" onclick="refreshVerifyCode()"/>
-		        	<!--<input id="verifyCode"  class="form-control" style="display:none"/>-->
+		        	<input id="verifyCode"  class="form-control" style="display:none"/>
 		        	<button class="btn btn-primary" type="button" id="buyButton"onclick="getSalePath()">Buy it now!</button>
         		</div>
         	</div>
@@ -216,22 +216,24 @@ function getDetail(){
 function countDown(){
 	var remainSeconds = $("#remainSeconds").val();
 	var timeout;
-	if(remainSeconds > 0){//秒杀还没开始，倒计时
+	if(remainSeconds > 0){//waiting for start，count down
 	   $("#buyButton").attr("disabled", true);
-	   $("#saleTip").html("Count down: ："+remainSeconds+"秒");
+	   $("#saleTip").html("Count down: ："+remainSeconds+" Second");
 		timeout = setTimeout(function(){
 			$("#countDown").text(remainSeconds - 1);
 			$("#remainSeconds").val(remainSeconds - 1);
 			countDown();
 		},1000);
-	}else if(remainSeconds == 0){//秒杀进行中
+	}else if(remainSeconds == 0){//being
 		$("#buyButton").attr("disabled", false);
 		if(timeout){
 			clearTimeout(timeout);
 		}
 		$("#saleTip").html("Processing");
-
-	}else{//秒杀已经结束
+		$("#verifyCodeImg").attr("src", "/sale/verifyCode?goodsId="+$("#goodsId").val());
+    $("#verifyCodeImg").show();
+    $("#verifyCode").show();
+	}else{//end
 		$("#buyButton").attr("disabled", true);
 		$("#saleTip").html("Has finished!");
 		$("#verifyCodeImg").hide();
